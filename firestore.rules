@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isResourceOwner() {
+      return isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    function isCreatingOwnResource() {
+      return isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    function isUpdatingOwnResourceWithoutChangingOwner() {
+      return isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId;
+    }
+
+    // User profile settings & metadata
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Analyzed Document Summaries & Intelligence Reports
+    match /analyses/{analysisId} {
+      allow read: if isResourceOwner();
+      allow create: if isCreatingOwnResource();
+      allow update: if isUpdatingOwnResourceWithoutChangingOwner();
+      allow delete: if isResourceOwner();
+    }
+
+    // Evidence Vault Documents & Extracted Facts
+    match /vault_documents/{docId} {
+      allow read: if isResourceOwner();
+      allow create: if isCreatingOwnResource();
+      allow update: if isUpdatingOwnResourceWithoutChangingOwner();
+      allow delete: if isResourceOwner();
+    }
+
+    // Applicant / Organization Profiles
+    match /applicant_profiles/{profileId} {
+      allow read: if isOwner(profileId) || isResourceOwner();
+      allow create: if isOwner(profileId) || isCreatingOwnResource();
+      allow update: if (isOwner(profileId) && (!('userId' in resource.data) || request.resource.data.userId == resource.data.userId))
+                    || isUpdatingOwnResourceWithoutChangingOwner();
+      allow delete: if isOwner(profileId) || isResourceOwner();
+    }
+
+    // Tracked Deadlines & Action Checklists
+    match /deadlines/{deadlineId} {
+      allow read: if isResourceOwner();
+      allow create: if isCreatingOwnResource();
+      allow update: if isUpdatingOwnResourceWithoutChangingOwner();
+      allow delete: if isResourceOwner();
+    }
+  }
+}

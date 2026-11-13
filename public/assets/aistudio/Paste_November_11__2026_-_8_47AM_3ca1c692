@@ -1,0 +1,2110 @@
+# DOCULENS — COMPLETE CODEBASE REPAIR & FEATURE IMPLEMENTATION MASTER PROMPT
+## For Google AI Studio — Existing Project Repair, Document Intelligence, AI Integration, Fraud Detection & Full Application Testing
+
+---
+
+# YOUR ROLE AND PRIMARY OBJECTIVE
+
+You are an expert full-stack engineer, software architect, document-intelligence specialist, AI integration engineer, security engineer and QA tester.
+
+You are working directly on my **existing DOCULENS project inside Google AI Studio**.
+
+Your task is to investigate, repair, improve and complete the existing application.
+
+This is not a request to build a new application from scratch.
+
+This is not a request to create a UI prototype.
+
+This is not a request to simply provide recommendations.
+
+**You must work on the actual existing codebase, identify the real problems, fix their underlying causes, preserve working functionality and verify the results.**
+
+DOCULENS is a universal document intelligence platform. It should help anyone who struggles to understand, review, extract information from or evaluate documents.
+
+Its users may include:
+
+- Students and college applicants.
+- Scholarship applicants.
+- Job seekers and employees.
+- Freelancers and independent professionals.
+- Small businesses and startups.
+- Large companies and enterprises.
+- Government and public-sector organisations.
+- NGOs and educational institutions.
+- Procurement teams and contractors.
+- Ordinary people dealing with complicated documents.
+
+It is NOT a student-only document reader.
+
+The platform should work with RFPs, tenders, scholarships, admission documents, contracts, job descriptions, financial reports, government schemes, policies, PDFs, Word files, spreadsheets, presentations, scanned documents and other supported formats.
+
+The most important principle is:
+
+**DOCULENS must provide reliable document analysis even without AI. AI should improve the analysis, not be the only reason the application works.**
+
+---
+
+# PART 0 — ABSOLUTE RULES
+
+Read and follow these rules before touching the code.
+
+## 0.1 Google AI Studio environment
+
+You are working inside Google AI Studio, not Antigravity.
+
+Use the existing project files and the editing capabilities available in this environment.
+
+Do not assume that you have access to Antigravity-specific features, subagents or workflows.
+
+Do not simply give me instructions to make changes manually. Make the changes directly in the existing project wherever the environment permits.
+
+If a task cannot be completed because the environment does not provide the necessary execution capability, clearly identify the blocker and still implement everything that can safely be completed.
+
+## 0.2 Do not install anything
+
+I do not give permission to install software on my computer.
+
+Strictly prohibited:
+
+- `npm install`
+- `npm i`
+- `pip install`
+- Installing global packages.
+- Installing Python packages.
+- Installing new system dependencies.
+- Installing additional software.
+- Downloading tools or software.
+- Installing new Docker images.
+- Replacing the existing project setup simply because a different library would be easier.
+
+Use the dependencies already present in the project.
+
+You may run existing build, lint and test commands only when their dependencies are already available in the working environment.
+
+If a feature requires a dependency that is not already available, find an implementation using the existing stack or report the limitation. Do not install anything.
+
+## 0.3 Protect sensitive information
+
+Do not inspect, display, print, copy, decode, transmit or expose sensitive files or credentials.
+
+Exclude:
+
+- `.env` files and environment-specific secret files.
+- API keys, access tokens and passwords.
+- Private keys and certificates.
+- Firebase service-account credentials.
+- Private database files and backups.
+- User-uploaded confidential documents.
+- Authentication sessions and private account records.
+- Anything that appears to contain private credentials or personal information.
+
+Do not inspect the contents of these four files:
+
+`public/assets/aistudio/Paste_November_08__2026_-_1_20PM_93a950a2`
+
+`public/assets/aistudio/Paste_November_09__2026_-_5_40PM_1c0663a5`
+
+`public/assets/aistudio/Paste_November_09__2026_-_6_23PM_8b197953`
+
+`public/assets/aistudio/Paste_November_09__2026_-_9_22PM_d86b5b23`
+
+Do not attempt to recover their contents or search their contents through another method.
+
+If another potentially sensitive file is discovered, exclude it too.
+
+You may inspect ordinary application source files, frontend components, parsers, services, types, non-secret configuration, CSS, tests and security rules.
+
+Never expose API keys in debugging logs or the final report.
+
+## 0.4 Preserve the technology stack
+
+The existing application uses:
+
+- React
+- Vite
+- TypeScript
+- Express
+- Node.js
+- Python FastAPI
+- Docling document-processing service
+- Existing PDF, spreadsheet, Word and OCR parsers
+- Existing AI provider integration
+- Existing storage and privacy services
+
+Do not migrate the application to Next.js or replace the entire framework.
+
+Do not rebuild the application from scratch.
+
+Do not remove existing functionality merely to make the code simpler.
+
+Do not unnecessarily modify package files, build configuration, lockfiles or framework setup.
+
+## 0.5 Preserve user API-key privacy
+
+DOCULENS uses a BYOK architecture.
+
+Each user provides their own AI provider API key through AI Settings.
+
+Do not:
+
+- Request an API key from me.
+- Hardcode an API key in frontend or backend source code.
+- Embed my personal API key in the published application.
+- Expose another user's API key.
+- Log the full API key.
+- Send the original unredacted document to an external AI provider.
+
+Preserve the existing encrypted key-vault functionality.
+
+Users must still be able to use the application without providing an AI key.
+
+## 0.6 No fabricated results
+
+Never invent:
+
+- Document deadlines.
+- Scholarship amounts.
+- Contract values.
+- Mandatory requirements.
+- Eligibility conditions.
+- Application documents.
+- Legal clauses.
+- Evidence references.
+- Document page numbers.
+- OCR results.
+- Authenticity scores.
+- AI-analysis results.
+
+When the source does not contain information, say:
+
+- Not stated in source.
+- Not detected.
+- Needs verification.
+- Not enough evidence.
+- Could not reliably extract.
+
+**An absence of extracted information must never be converted into an invented fact.**
+
+## 0.7 Work carefully
+
+Before modifying shared files, understand their dependencies.
+
+Make focused changes instead of rewriting large parts of the application.
+
+Preserve existing IDs, types and data compatibility wherever possible.
+
+Do not leave unfinished TODOs, fake implementations or placeholder functions.
+
+If a problem is discovered in another part of the application while fixing a primary issue, investigate and fix it when it is within scope.
+
+---
+
+# PART 1 — INVESTIGATE AND DOCUMENT ALL EXISTING PROBLEMS FIRST
+
+Before implementation, inspect the existing codebase.
+
+Create an internal problem list with:
+
+1. Problem description.
+2. Affected file or component.
+3. Root cause.
+4. User impact.
+5. Proposed solution.
+6. How the fix will be tested.
+
+Use the following findings as an initial checklist. Verify each issue against the actual source before making changes. Do not assume every finding is still present if the code has changed.
+
+## 1.1 Date extraction and deadline classification
+
+**Primary file:** `src/services/deterministicEngine.ts`
+
+The current date extraction implementation has a dangerous default:
+
+```ts
+let label = "Important Date";
+let type: ImportantDateItem["type"] = "official_deadline";
+```
+
+This means a date can initially be classified as an official deadline without proving that it is one.
+
+Other problems:
+
+- Historical dates can appear as current deadlines.
+- Document publication dates can be confused with submission deadlines.
+- RFP release dates can be confused with proposal submission deadlines.
+- Conference and interview dates can be confused with application deadlines.
+- The context window may not capture the actual table heading or event description.
+- Important dates can be omitted because of fixed result limits.
+- Multiple unrelated dates can be displayed with the same classification.
+- Ambiguous numeric dates can be interpreted incorrectly.
+
+### Observed scholarship example
+
+A scholarship document containing approximately 55 pages produced multiple unrelated dates.
+
+The application selected January 1, 2013 as the primary deadline without establishing that it was the actual application deadline.
+
+### Observed RFP example
+
+A 32-page procurement document contained a schedule with several distinct milestones.
+
+DOCULENS selected the RFP release date instead of the proposal submission deadline.
+
+The application also classified too many unrelated dates as official deadlines.
+
+## 1.2 Financial extraction and amount classification
+
+**Primary file:** `src/services/deterministicEngine.ts`
+
+The currency and amount extraction logic is too broad.
+
+Problems:
+
+- Amounts from different programmes can be combined.
+- Scholarship awards, application fees, tuition fees and unrelated examples can be mixed.
+- RFP contract amounts and financial baselines can be confused.
+- `$0` contractual baselines can be treated as actual budgets.
+- Nearby text may not be enough to identify what an amount represents.
+- Indian currency formats such as lakh and crore require proper interpretation.
+- Important amounts can be omitted because the results are limited.
+- Amounts can lose the original formatting or currency.
+
+The scholarship test showed unrelated values being mixed together, including:
+
+- Rs. 4
+- $5,000
+- $30,000
+- $355 million
+- $1,500
+- $21,580
+- £10,000
+- $50,000
+
+These must not automatically become one scholarship award summary.
+
+## 1.3 Incorrect mandatory requirement detection
+
+**Primary file:** `src/services/deterministicEngine.ts`
+
+The current requirement detection can mistake general advice and informational headings for compulsory requirements.
+
+Examples observed:
+
+- Show That You Are Well Rounded.
+- Add a Personal Touch.
+- Choose Your Field of Study.
+- General RFP system descriptions.
+- Explanations of an organisation's services.
+
+The code also contains template-based fallback logic capable of inserting requirements that are not actually present in the uploaded document.
+
+This is a serious issue.
+
+A scholarship recommendation is not automatically a scholarship eligibility requirement.
+
+A heading called "Checklist" does not automatically mean every following paragraph is a mandatory submission document.
+
+## 1.4 RFP analysis contains hardcoded assumptions
+
+**Primary file:** `src/services/rfpEngine.ts`
+
+The existing engine has a special WCI-related detection path that loads preconfigured WCI information.
+
+This can be useful for a demo fixture, but it must not contaminate genuine document analysis.
+
+Other generic RFP functions can insert assumptions such as:
+
+- Generic legal entity eligibility.
+- Generic technical proposal requirements.
+- Generic commercial proposal requirements.
+- Net 30 payment terms.
+- Generic retainage clauses.
+- Generic schedules and milestones.
+
+These must not be treated as facts from an actual RFP unless the source supports them.
+
+The application must analyse different procurement documents dynamically.
+
+## 1.5 AI integration and model-selection problems
+
+Inspect:
+
+- `src/services/aiProvider.ts`
+- `src/components/analysis/AnalysisStudio.tsx`
+- `src/components/settings/AiSettingsView.tsx`
+- `server.ts`
+
+Initial issues to verify:
+
+- AI enhancement is a separate action from deterministic upload analysis.
+- The UI-selected model is not consistently passed into AI execution.
+- Some AI requests use a hardcoded model.
+- Gemini requests do not consistently respect the selected model.
+- OpenRouter entries with missing pricing fields can be incorrectly identified as free.
+- Long documents are analysed using sampled text rather than systematic whole-document processing.
+- The backend does not sufficiently validate AI-generated evidence.
+- AI operations need clearer loading states, progress and failure handling.
+
+## 1.6 Document extraction and OCR problems
+
+Inspect:
+
+- `src/services/middleware/doclingMiddleware.ts`
+- `src/services/parsers/doclingClient.ts`
+- `src/services/parsers/unifiedParser.ts`
+- `src/services/parsers/pdfParser.ts`
+- `src/services/parsers/ocrParser.ts`
+- `src/services/parsers/sheetParser.ts`
+- `services/docling_service/app.py`
+
+Investigate:
+
+- Browser-only OCR APIs being invoked in Node.
+- Scanned PDFs not receiving OCR in some execution paths.
+- Incomplete page coverage.
+- Tables missing from extraction.
+- Page numbers being lost.
+- Parser fallbacks that produce incomplete text.
+- Incorrect OCR-success indicators.
+- Confidence values that are hardcoded rather than measured.
+- Upload-size limits being inconsistent.
+- Timeout and cancellation behaviour.
+- Docling service failures.
+- Whether successful extraction is reported even when pages contain little or no usable text.
+
+## 1.7 Incorrect analysis readiness and progress
+
+Inspect:
+
+- `src/App.tsx`
+- `src/components/analysis/ScanningOverlay.tsx`
+- `src/components/analysis/AnalysisStudio.tsx`
+- Related progress and readiness services.
+
+Investigate:
+
+- Empty pages being counted as successfully extracted.
+- OCR page counts being inaccurate.
+- Fake or misleading progress percentages.
+- Analysis readiness being confused with applicant eligibility.
+- A readiness score being shown without explaining its calculation.
+
+## 1.8 Privacy and data protection
+
+Inspect:
+
+- `src/services/privacyService.ts`
+- `src/services/byokVault.ts`
+- `src/services/storageAdapter.ts`
+- `src/components/settings/PrivacyCenterView.tsx`
+- `firestore.rules`
+- Relevant server-side logging and API code.
+
+Investigate:
+
+- Phone number detection failures.
+- Address detection limitations.
+- Company-name detector capturing entire sentences.
+- Bank and identity information not being detected.
+- Image content not being protected by text-only redaction.
+- API-key logging or unnecessary exposure.
+- Firestore ownership update rules.
+- Storage and local persistence behaviour.
+
+## 1.9 Missing File Authenticity & Fraud Signals feature
+
+A dedicated authenticity and fraud-risk analysis feature is not implemented properly.
+
+The existing PDF metadata extraction is not enough.
+
+Build a proper, evidence-based feature as described later in this prompt.
+
+---
+
+# PART 2 — REPAIR THE CORE DOCUMENT INTELLIGENCE ENGINE
+
+This is the most important part of DOCULENS.
+
+The deterministic engine must work without any AI API key.
+
+It should produce genuinely useful, source-grounded results from the extracted document.
+
+## 2.1 Rebuild date extraction
+
+Do not just add more regular expressions.
+
+Implement context-aware event and deadline extraction.
+
+Every date record should contain:
+
+- Original date text.
+- Normalized date, if unambiguous.
+- Event title.
+- Event type.
+- Associated programme, organisation or contract.
+- Page number.
+- Section or table location.
+- Supporting evidence quote.
+- Confidence.
+- Whether it is explicitly stated or inferred.
+- Verification status.
+
+Support different date types:
+
+1. Application opening.
+2. Application submission deadline.
+3. Proposal submission deadline.
+4. RFP release date.
+5. Question and clarification deadline.
+6. Pre-bid conference.
+7. Interview date.
+8. Examination date.
+9. Document submission deadline.
+10. Fee payment deadline.
+11. Award announcement.
+12. Contract commencement.
+13. Contract expiry.
+14. Evaluation period.
+15. Renewal date.
+16. Publication date.
+17. Effective date.
+18. Historical event.
+19. Other important date.
+20. Unknown or ambiguous date.
+
+### Important classification rules
+
+- A release date is not a submission deadline.
+- A publication date is not an application deadline.
+- An interview date is not a proposal deadline.
+- An award announcement is not an application deadline.
+- A historical example must not become a current action item.
+- A document's creation date is not automatically its application deadline.
+- A date must have sufficient supporting context before it is labelled official.
+- When the exact event cannot be established, use "Unclassified date" instead of guessing.
+
+Use nearby paragraphs, headings, table row labels, table column names and document sections to understand the date.
+
+Preserve table relationships when possible.
+
+For example, if a table contains an Event column and a Date column, associate each date with the event from its row.
+
+Do not analyse each date independently from its context.
+
+### Primary deadline selection
+
+Create a dedicated primary-deadline selection function.
+
+For scholarships:
+
+Prioritise the actual application submission deadline.
+
+For RFPs:
+
+Prioritise the final proposal submission deadline, not the release date, question deadline or pre-bid meeting.
+
+For college admissions:
+
+Prioritise the application/admission submission deadline.
+
+For jobs:
+
+Prioritise the application closing date.
+
+When multiple programmes have separate deadlines, keep the deadlines separate.
+
+If a document has no identifiable submission deadline, display:
+
+**Primary deadline: Not clearly stated in the document.**
+
+Do not select the earliest date simply because it occurs first.
+
+### Deadline status
+
+Use the actual current date and the document's stated timezone, when available.
+
+Statuses should include:
+
+- Upcoming.
+- Due today.
+- Passed.
+- Historical.
+- Date unclear.
+- Not stated.
+
+Do not assume that a document's year is current.
+
+Keep the source date and normalized date visible so the user can verify the result.
+
+---
+
+## 2.2 Rebuild financial intelligence
+
+Each financial entry must be a structured, independent record.
+
+Include:
+
+- Amount.
+- Currency.
+- Original formatting.
+- Normalized value, where valid.
+- Financial category.
+- Associated programme, contract or entity.
+- Page number.
+- Section/table reference.
+- Supporting quotation.
+- Confidence.
+- Verification status.
+
+Distinguish between:
+
+- Scholarship amount.
+- Grant amount.
+- Tuition fee.
+- Application fee.
+- Registration fee.
+- Examination fee.
+- Contract ceiling.
+- Estimated contract value.
+- Actual project budget.
+- Annual recurring cost.
+- Monthly payment.
+- Hourly rate.
+- Bid bond.
+- Performance security.
+- Insurance requirement.
+- Penalty.
+- Retainage.
+- Deposit.
+- Refund.
+- Revenue.
+- Financial baseline.
+- Other financial amount.
+
+### Critical rules
+
+- Do not treat every currency amount as a budget.
+- Do not combine unrelated amounts.
+- Do not interpret `$0` as a real contract budget without context.
+- Distinguish guaranteed amounts from estimates and ceilings.
+- Distinguish one-time amounts from recurring amounts.
+- Preserve the source currency.
+- Do not perform currency conversion unless a reliable exchange-rate source is available.
+- Do not assume missing financial information is zero.
+
+For Indian amounts, support common formats such as:
+
+- ₹50,000
+- ₹1,50,000
+- ₹5 lakh
+- ₹2.5 crore
+
+Do not misinterpret these formats as ordinary thousands or decimals.
+
+If a financial value cannot be classified confidently, place it under **Other amounts — Needs verification**.
+
+---
+
+## 2.3 Rebuild requirements and checklist intelligence
+
+This must be evidence-driven.
+
+Create separate classifications:
+
+- Mandatory.
+- Conditional.
+- Recommended.
+- Informational.
+- Not applicable.
+- Unclear.
+
+Every requirement must include:
+
+- Requirement title.
+- Description.
+- Classification.
+- Mandatory/optional status.
+- Condition, if any.
+- Page number.
+- Section reference.
+- Exact supporting quotation.
+- Confidence.
+- Verification status.
+- Evidence status.
+
+### Mandatory requirement rules
+
+A requirement should only be marked Mandatory when the document explicitly supports that interpretation.
+
+Examples of strong evidence include:
+
+- "Must submit."
+- "Shall provide."
+- "Required."
+- "Mandatory."
+- "Failure to submit will result in disqualification."
+- Explicit submission checklist entries.
+
+However, consider surrounding context.
+
+A sentence mentioning "required documents" in an explanatory example must not automatically create a requirement.
+
+### Prohibited behaviour
+
+Never invent requirements to fill empty categories.
+
+Never insert template requirements into a real document's extracted mandatory checklist.
+
+Never classify every heading or bullet point as compulsory.
+
+Never treat general advice as a legal or administrative requirement.
+
+For example:
+
+"Proofread your essay" may be advice, not a mandatory submission requirement.
+
+"Submit a signed proposal before 5 PM on August 20" is an explicit requirement.
+
+### Evidence-first behaviour
+
+If the system suspects that a requirement exists but cannot find a reliable source quote, mark it:
+
+**Needs verification — Evidence not confirmed.**
+
+Keep recommended preparation tasks separate from actual issuing-authority requirements.
+
+---
+
+# PART 3 — REPAIR THE RFP ENGINE
+
+**Primary file:** `src/services/rfpEngine.ts`
+
+RFP intelligence must be dynamically generated from the uploaded document.
+
+Do not assume every RFP has the same procurement process.
+
+Do not hardcode the contents of a particular RFP into the general analysis pipeline.
+
+## 3.1 Isolate the WCI demo data
+
+Preserve the existing WCI demo example if the application needs it.
+
+However:
+
+- Put it behind an explicit demo-data path.
+- Never activate it just because a real document contains similar words.
+- Never merge its data with a user's actual document.
+- Clearly identify every fixture as DEMO DATA.
+- Ensure normal uploads use the generic evidence-driven analysis engine.
+
+## 3.2 RFP analysis must cover
+
+Extract these categories when present:
+
+**Procurement information**
+
+- Issuing authority.
+- Procuring organisation.
+- RFP reference number.
+- Project title.
+- Procurement type.
+- Publication date.
+- Project location.
+- Contact information.
+
+**Dates and schedule**
+
+- Release date.
+- Intent-to-bid deadline.
+- Pre-bid conference.
+- Questions deadline.
+- Clarification responses.
+- Proposal submission deadline.
+- Interview dates.
+- Evaluation period.
+- Award announcement.
+- Contract commencement.
+
+**Eligibility**
+
+- Legal entity requirements.
+- Experience.
+- Financial capacity.
+- Licences.
+- Certifications.
+- Geographic restrictions.
+- Previous project requirements.
+- Joint venture and consortium conditions.
+- Subcontracting conditions.
+
+**Technical scope**
+
+- Scope of work.
+- Deliverables.
+- Specifications.
+- Technical standards.
+- Required services.
+- Implementation milestones.
+- Performance requirements.
+- Acceptance criteria.
+- Key personnel.
+- Service-level agreements.
+
+**Commercial terms**
+
+- Estimated budget.
+- Contract ceiling.
+- Pricing requirements.
+- Payment schedule.
+- Bid security.
+- Performance bond.
+- Insurance.
+- Penalties.
+- Retainage.
+- Tax requirements.
+- Currency restrictions.
+
+**Evaluation**
+
+- Technical evaluation.
+- Financial evaluation.
+- Scoring weights.
+- Minimum qualifying score.
+- Mandatory pass/fail conditions.
+- Presentation and interview.
+- Award criteria.
+
+**Contractual terms**
+
+- Contract duration.
+- Renewal.
+- Termination.
+- Liability.
+- Indemnification.
+- Intellectual property.
+- Confidentiality.
+- Dispute resolution.
+- Governing law.
+
+**Submission instructions**
+
+- Required proposal format.
+- File format.
+- Page limits.
+- Number of copies.
+- Signature and seal requirements.
+- Submission address or portal.
+- Email restrictions.
+- Naming conventions.
+- Required attachments.
+
+**Bid preparation**
+
+- Compliance matrix.
+- Mandatory submission checklist.
+- Missing information.
+- Risk register.
+- Bid/no-bid considerations.
+- Clarification questions.
+- Recommended preparation plan.
+
+Do not display every category as missing when the document does not contain that category.
+
+Show "Not stated" or "Not applicable" appropriately.
+
+## 3.3 Correct RFP deadline logic
+
+The final proposal submission deadline must be clearly distinguished from every other milestone.
+
+Do not select:
+
+- RFP release date.
+- Questions deadline.
+- Pre-bid meeting.
+- Presentation date.
+- Evaluation start.
+- Award date.
+
+as the proposal submission deadline.
+
+If the document contains an addendum that changes the deadline, the latest applicable amendment should be considered, provided the source evidence supports it.
+
+Flag conflicting original and amended deadlines for verification.
+
+---
+
+# PART 4 — REPAIR AI INTEGRATION
+
+Inspect and repair the full AI flow.
+
+Files include:
+
+- `src/services/aiProvider.ts`
+- `src/components/analysis/AnalysisStudio.tsx`
+- `src/components/settings/AiSettingsView.tsx`
+- `src/components/analysis/DocumentQaPanel.tsx`
+- `server.ts`
+- Related AI and privacy services.
+
+## 4.1 Preserve BYOK
+
+Every user must be able to configure their own API key.
+
+Preserve the existing provider support and settings interface.
+
+The application must never depend on my personal API key.
+
+Do not create a free shared server key or put a private key inside public frontend code.
+
+Without an AI key, the deterministic analysis must still work.
+
+The UI should clearly distinguish:
+
+- Deterministic analysis.
+- AI-enhanced analysis.
+- AI unavailable.
+- API key not configured.
+- Provider error.
+
+Do not show AI-enhanced badges unless AI actually completed successfully.
+
+## 4.2 Fix model selection
+
+The model selected in AI Settings must be the model sent to the backend.
+
+Trace the selected model through the complete chain:
+
+AI Settings → selected model state → AI execution function → API request → backend provider → actual model endpoint.
+
+Do not hardcode a model in a way that overrides the user's choice.
+
+Support the existing Gemini and OpenRouter provider architecture.
+
+For Gemini requests, use the configured valid model identifier rather than an obsolete or hardcoded model.
+
+For OpenRouter, use the exact selected model ID.
+
+If the selected model is unavailable, show an error and allow the user to select another model. Do not silently switch to a paid model.
+
+## 4.3 Fix free-model detection
+
+The OpenRouter model catalogue must distinguish:
+
+- Verified free.
+- Paid.
+- Pricing unavailable.
+- Model unavailable.
+- Unknown.
+
+Do not assume missing pricing means free.
+
+A model should only be labelled FREE if its pricing data confirms zero prompt and completion cost under the provider's returned catalogue information.
+
+Do not rely solely on a hardcoded list of free models.
+
+Refresh the available model catalogue safely.
+
+If the selected free model is no longer available or no longer free:
+
+1. Notify the user.
+2. Identify currently verified free alternatives.
+3. Allow automatic selection of another verified free model only when the user has enabled that behaviour or it is clearly part of the existing settings.
+4. Never silently switch to a paid model.
+5. Never claim that a model is free when its price is unknown.
+
+Remember: a free model does not necessarily mean free API access. The user still provides their own provider key.
+
+## 4.4 Fix long-document AI analysis
+
+Do not rely on simply sending the first 50,000–55,000 characters of a long document.
+
+Implement a chunk-based analysis pipeline.
+
+Recommended flow:
+
+1. Receive the parsed document.
+2. Preserve page numbers and section information.
+3. Build sensible chunks using page and section boundaries.
+4. Keep tables and their headers together.
+5. Use small overlapping context windows where needed.
+6. Analyse relevant chunks separately.
+7. Validate the extracted results.
+8. Aggregate and deduplicate results.
+9. Resolve conflicts using source evidence.
+10. Generate the final document report.
+
+Respect the selected model's available context limits.
+
+Limit simultaneous requests to avoid rate-limit problems.
+
+Do not send the same entire document repeatedly when a focused chunk is sufficient.
+
+If the provider has a token or context limit, handle it gracefully.
+
+If some chunks cannot be analysed, tell the user which sections could not be processed. Do not pretend the whole document was analysed.
+
+## 4.5 AI evidence validation
+
+AI-generated results must be validated before appearing as confirmed findings.
+
+For every important AI-extracted claim, require:
+
+- Evidence quote.
+- Page reference.
+- Section or table reference when possible.
+- Extracted value.
+- Confidence.
+- Verification status.
+
+Check that the quote actually exists in the parsed document text.
+
+If the quote does not exist, reject the claim or mark it unverified.
+
+Never invent a page number.
+
+Never assign an arbitrary high confidence value just because the AI returned an answer.
+
+Never default an unspecified AI requirement to Mandatory.
+
+AI can suggest a classification, but deterministic evidence validation must control the final status.
+
+## 4.6 AI failure handling
+
+Provide clear states for:
+
+- Waiting for API response.
+- Analysing document.
+- Processing document chunks.
+- Aggregating findings.
+- Validating evidence.
+- Analysis completed.
+- Partial analysis.
+- Provider error.
+- Rate limit.
+- Invalid key.
+- Unsupported model.
+- Timeout.
+- Network failure.
+
+Provide retry where appropriate.
+
+Do not leave the interface loading forever.
+
+Do not return a fake completed report after a failed request.
+
+---
+
+# PART 5 — REPAIR DOCUMENT EXTRACTION
+
+DOCULENS must reliably extract useful content before analysing it.
+
+Inspect and improve all existing parsers and the Docling integration without adding dependencies.
+
+## 5.1 Preserve supported formats
+
+Verify actual support for:
+
+- PDF.
+- Scanned PDF.
+- DOCX.
+- DOC.
+- XLSX.
+- XLS.
+- CSV.
+- ODS.
+- PPTX.
+- PPT.
+- ODP.
+- RTF.
+- ODT.
+- TXT.
+- HTML.
+- Images, where supported by the existing OCR implementation.
+
+Do not claim support for a file type that cannot be processed.
+
+If a format is unsupported or extraction fails, show the reason and a useful next step.
+
+## 5.2 Improve PDF processing
+
+Use the existing PDF parser and Docling integration.
+
+Preserve:
+
+- Page text.
+- Page numbers.
+- Reading order.
+- Tables.
+- Headings.
+- Links and references where supported.
+- Page-level extraction status.
+
+Do not report empty pages as successfully parsed.
+
+Do not use a high fixed confidence score for every page.
+
+Use an honest confidence or quality estimate based on actual extraction signals.
+
+If the parser cannot determine genuine confidence, label it as an estimate or do not display it.
+
+## 5.3 Repair scanned PDF OCR
+
+Investigate the current problem in which browser-only OCR functionality may be invoked from a Node.js execution path.
+
+Use the correct environment for the available OCR implementation.
+
+- Browser-only APIs must execute in the browser.
+- Server-side extraction must use server-compatible functionality.
+- Do not call browser canvas APIs from Node.
+- Do not silently skip scanned pages.
+- Do not mark the complete document OCR-processed when only some pages were processed.
+
+When OCR is unavailable:
+
+Show a clear message identifying the affected pages.
+
+If an existing configurable page limit is necessary, clearly show which pages were processed and which were not.
+
+Do not silently analyse only the first 15 pages of a longer scanned document.
+
+## 5.4 Improve tables and spreadsheets
+
+Tables are extremely important for RFPs, schedules, financial reports and scholarship information.
+
+Preserve:
+
+- Table headings.
+- Column names.
+- Row relationships.
+- Cell values.
+- Worksheet names.
+- Page or sheet references.
+- Original number and currency formats.
+
+Do not flatten a table into unrelated sentences if a structured representation is available.
+
+A schedule table must keep each event associated with its correct date.
+
+A financial table must preserve which amount belongs to which description.
+
+For spreadsheets, ensure all relevant sheets and populated rows are considered.
+
+Never silently truncate rows.
+
+## 5.5 Accurate extraction coverage
+
+Track:
+
+- Total pages.
+- Pages with usable text.
+- Pages with no usable text.
+- Pages processed by OCR.
+- Pages where OCR failed.
+- Tables detected.
+- Tables extracted.
+- Pages with extraction warnings.
+
+Do not infer the OCR count from a single document-level boolean.
+
+A document is not fully extracted simply because the parser returned a non-empty string.
+
+---
+
+# PART 6 — EVIDENCE, READINESS AND DOCUMENT MEMORY
+
+DOCULENS must distinguish between finding a requirement and proving that a user satisfies it.
+
+## 6.1 Evidence statuses
+
+Every requirement should support these statuses:
+
+- Found.
+- Missing evidence.
+- Needs verification.
+- Conflict.
+- Not applicable.
+- Not assessed.
+
+A file existing in the user's uploads does not automatically prove the requirement is satisfied.
+
+For example:
+
+If an RFP requires three years of previous project experience, the existence of a company profile does not prove three years of experience.
+
+The application must inspect the actual content of the evidence.
+
+## 6.2 Evidence record
+
+Each evidence match should include:
+
+- Requirement being checked.
+- Relevant uploaded document.
+- Evidence excerpt.
+- Page or section reference.
+- Extracted fact.
+- Match explanation.
+- Confidence.
+- Status.
+
+Do not create evidence references that do not exist.
+
+## 6.3 Readiness score
+
+Separate these three concepts:
+
+1. Document extraction completeness.
+2. Analysis completeness.
+3. Applicant or bidder eligibility/evidence fit.
+
+Do not combine them into one misleading percentage.
+
+For example:
+
+A document may be 100% extracted but the user's evidence may be incomplete.
+
+A scholarship applicant's eligibility cannot be determined simply because all dates were extracted.
+
+If a readiness score exists, explain the formula and use only verified data.
+
+Do not show a default 0%, 35% or 100% simply to fill the interface.
+
+## 6.4 Document memory
+
+Preserve existing Document Memory functionality.
+
+Ensure stored documents and previous analyses retain their original source references.
+
+Do not reconstruct lost original documents as though the reconstructed summary were the original document.
+
+If the original parsed document is unavailable, clearly label the record as an incomplete restored analysis.
+
+Never fabricate page-level citations during restoration.
+
+---
+
+# PART 7 — PRIVACY AND SECURITY REPAIRS
+
+Privacy is a core DOCULENS feature.
+
+## 7.1 Improve sensitive information detection
+
+Improve the existing privacy service using its available code and dependencies.
+
+Detect, where reasonably possible:
+
+- Phone numbers.
+- Personal addresses.
+- Government identity numbers.
+- Bank account numbers.
+- Payment card numbers.
+- Tax identification numbers.
+- Passwords.
+- Access tokens.
+- API keys.
+- Confidential reference numbers.
+
+Preserve the existing intended visibility policy for ordinary company names, person names and email addresses unless the user changes their privacy settings.
+
+Do not redact every ordinary number indiscriminately.
+
+A document reference number is not necessarily sensitive personal information.
+
+## 7.2 Fix company-name detection
+
+Correct the regex behaviour that can capture an entire sentence after terms such as:
+
+- Issued by.
+- Issuing authority.
+- Organisation.
+- Client.
+- Contractor.
+- Entity.
+
+Capture only a reasonably identified organisation name.
+
+Do not swallow entire paragraphs.
+
+If extraction is ambiguous, do not replace the whole paragraph with a company name.
+
+## 7.3 Redaction before AI
+
+Follow this order:
+
+Original document → Extraction → Sensitive information detection → User review where applicable → Redacted text → External AI analysis.
+
+Only redacted content may be sent to an external AI provider.
+
+Never assume that text redaction removes sensitive information from original image pixels.
+
+Do not send original scanned images to external AI providers unless an appropriately protected image-redaction flow exists and the application has clearly informed the user.
+
+## 7.4 Secure key vault
+
+Preserve the current BYOK vault.
+
+Review:
+
+- Encryption.
+- Key derivation.
+- Unlock and lock lifecycle.
+- Decrypted key lifetime in memory.
+- Storage of encrypted ciphertext.
+- Logout behaviour.
+- Error handling.
+
+Never log decrypted keys.
+
+Ensure API keys are not accidentally persisted in plaintext.
+
+Only send the selected key to the intended provider request over HTTPS.
+
+## 7.5 Firestore ownership
+
+Review `firestore.rules`.
+
+For update operations, ensure that a user cannot change the owner ID of an existing record.
+
+Enforce both existing-record ownership and new-record ownership.
+
+Do not weaken access rules to make the application work.
+
+## 7.6 Storage and privacy communication
+
+Inspect the existing storage adapter.
+
+Clearly distinguish:
+
+- Browser local storage.
+- Browser session state.
+- Cloud Firestore persistence.
+- Server-side processing.
+- Temporary processing memory.
+
+Do not claim that user documents are stored securely in the cloud if they are only in browser local storage.
+
+---
+
+# PART 8 — BUILD FILE AUTHENTICITY & FRAUD SIGNALS
+
+Add a dedicated feature named:
+
+# FILE AUTHENTICITY & FRAUD SIGNALS
+
+This should be available within document analysis as its own section or tab.
+
+It should analyse available file metadata and document-content warning signals.
+
+It must be useful without an AI key.
+
+AI may provide additional interpretation, but it must not be required for the basic checks.
+
+## 8.1 Basic file analysis
+
+Inspect:
+
+- Actual file type and file signature where supported.
+- File extension.
+- MIME type.
+- File size.
+- Page count or image dimensions.
+- Document metadata.
+- Available creation/modification timestamps.
+- Embedded metadata fields.
+- Available author and software information.
+
+Identify inconsistencies such as:
+
+- File extension and actual file type mismatch.
+- Missing or unusual metadata.
+- Inconsistent file information.
+- Unexpected document modifications, where evidence exists.
+- Suspicious embedded links, where the existing parser exposes them.
+- Unusual PDF structure indicators, where supported.
+
+Do not treat a missing metadata field as proof of fraud.
+
+## 8.2 PDF metadata
+
+Extract available PDF metadata:
+
+- Title.
+- Author.
+- Subject.
+- Creator.
+- Producer.
+- Creation date.
+- Modification date.
+- Page count.
+- Encryption status.
+- Available signature information.
+
+Distinguish document metadata from the computer's filesystem timestamps.
+
+A file's modification timestamp does not prove when its content was created.
+
+Do not claim that a PDF digital signature is valid unless its cryptographic validity and certificate chain have actually been verified.
+
+If signature verification is not supported, only report that signature information was detected or was unavailable.
+
+## 8.3 Image metadata
+
+Use existing capabilities to inspect image metadata where available.
+
+Potential signals:
+
+- EXIF information.
+- Camera/software information.
+- Image dimensions.
+- Creation timestamp.
+- Editing software tags.
+- Orientation information.
+- Metadata inconsistencies.
+
+Do not install a new EXIF package.
+
+Use existing libraries or browser capabilities already present.
+
+## 8.4 Text-based scam signals
+
+Analyse the document text for suspicious patterns, including:
+
+- Requests for unusual advance payments.
+- Pressure to pay immediately.
+- Unexpected bank-account changes.
+- Unverified payment instructions.
+- Suspicious links.
+- Requests for passwords or OTPs.
+- Unusual prize or guaranteed-return claims.
+- Mismatched organisation identities.
+- Unusual contact-information inconsistencies.
+- Threatening or coercive language.
+
+Every warning should include the supporting text and source location.
+
+A warning must explain why the signal is suspicious.
+
+## 8.5 Report design
+
+Show findings in categories:
+
+- File information.
+- Metadata findings.
+- File consistency checks.
+- Document-content risk signals.
+- Suspicious payment instructions.
+- Link and contact warnings.
+- Verification recommendations.
+
+Use transparent labels:
+
+- No warning detected.
+- Informational.
+- Low concern.
+- Needs verification.
+- Potentially suspicious.
+- Strong warning signal.
+
+A risk score may be used only if its calculation is transparent and based on actual findings.
+
+Do not claim:
+
+- "This document is definitely fake."
+- "This is 100% genuine."
+- "This image is AI-generated."
+
+Metadata can be edited, removed or forged. A missing metadata field is inconclusive.
+
+The feature must be an evidence-based warning system, not a fake authenticity certificate.
+
+---
+
+# PART 9 — IMPROVE THE USER EXPERIENCE WITHOUT DESTROYING THE DESIGN
+
+Preserve the current DOCULENS visual identity.
+
+Do not replace the design with a generic AI dashboard.
+
+Do not randomly remove animations, cards, tabs or existing sections.
+
+Improve existing screens while respecting the current design system.
+
+## 9.1 Upload experience
+
+The upload process must show clear stages:
+
+1. File selected.
+2. File validation.
+3. Document type detection.
+4. Text and layout extraction.
+5. OCR, if needed.
+6. Table extraction.
+7. Sensitive information detection.
+8. Deterministic analysis.
+9. Evidence validation.
+10. AI enhancement, if requested.
+11. Final analysis.
+
+Show meaningful status information.
+
+Do not simulate progress as though it is measured.
+
+If progress is estimated, communicate that it is an estimate.
+
+## 9.2 Analysis interface
+
+Organise results into useful, understandable sections.
+
+Suggested sections:
+
+- Overview.
+- Key Information.
+- Important Dates.
+- Financial Details.
+- Requirements & Checklist.
+- Eligibility.
+- Evidence.
+- Risks.
+- File Authenticity.
+- AI Insights.
+- Original Document.
+
+Show source evidence when a user opens a finding.
+
+Avoid filling the report with empty sections.
+
+## 9.3 Visual states
+
+Every major component must have:
+
+- Loading state.
+- Success state.
+- Empty state.
+- Error state.
+- Partial-result state.
+- Disabled state where appropriate.
+
+Ensure tabs, dropdowns, arrows, buttons, filters, modals, upload controls, navigation and interactive elements actually work.
+
+Fix:
+
+- Clipped text.
+- Horizontal overflow.
+- Broken scrolling.
+- Overlapping cards.
+- Incorrect responsive layouts.
+- Unreadable small text.
+- Unresponsive controls.
+- Inconsistent active-tab states.
+
+## 9.4 Preserve existing features
+
+Audit existing functionality such as:
+
+- Document upload.
+- Multiple file handling.
+- Document analysis.
+- AI enhancement.
+- AI questions and answers.
+- Document comparison.
+- Evidence vault.
+- Checklists.
+- Document memory.
+- Export functions.
+- Privacy settings.
+- API-key vault.
+- Dashboard.
+- Deadlines.
+- Spreadsheet viewer.
+- Account and settings interfaces.
+- Landing and entry pages.
+
+Do not accidentally remove features when repairing shared components.
+
+---
+
+# PART 10 — TECHNICAL IMPLEMENTATION REQUIREMENTS
+
+## 10.1 Make the code maintainable
+
+Use TypeScript types consistently.
+
+Avoid:
+
+- `any` unless genuinely necessary.
+- Duplicate extraction logic.
+- Hardcoded demo information in real analysis.
+- Unhandled promise rejections.
+- Silent error swallowing.
+- Unnecessary state duplication.
+- Arbitrary confidence values.
+- Unbounded parallel API requests.
+- Giant functions that combine unrelated responsibilities.
+
+Create or improve shared utilities only when needed.
+
+## 10.2 Use a shared evidence model
+
+Where appropriate, establish a common evidence structure used by:
+
+- Deterministic analysis.
+- AI enhancement.
+- RFP analysis.
+- Scholarship analysis.
+- Financial extraction.
+- Deadline extraction.
+- Evidence matching.
+- Fraud warnings.
+
+Keep the existing data model compatible where possible.
+
+Avoid creating multiple incompatible evidence formats.
+
+## 10.3 Validate all AI output
+
+Validate backend AI responses before returning them.
+
+Reject invalid JSON structures.
+
+Reject unsupported classifications.
+
+Verify evidence quotations against the source.
+
+Do not allow invalid AI data to crash the frontend.
+
+If the response is partly valid, preserve valid results and mark the rest as failed or unverified.
+
+## 10.4 API reliability
+
+Review the Express APIs and ensure:
+
+- Correct HTTP status codes.
+- Useful error messages.
+- Request validation.
+- Safe response structure.
+- Proper timeouts.
+- No secret logging.
+- Correct cancellation behaviour where supported.
+- No misleading success responses.
+
+Review existing 50 MB request limits. Do not blindly increase them. Use appropriate limits for JSON requests and file uploads separately, ensuring they do not conflict with intended file-upload support.
+
+## 10.5 Avoid fake cancellation and fake persistence
+
+If an extraction job uses an in-memory Map, do not describe it as durable database-backed job storage.
+
+If cancellation only changes a status field without aborting actual work, either implement real cancellation using available APIs or clearly report that cancellation is not yet complete.
+
+Do not pretend that a cancellation request stopped an ongoing parser.
+
+---
+
+# PART 11 — FUNCTIONAL TESTING AND QUALITY ASSURANCE
+
+Do not stop when the source code compiles.
+
+Test the actual functions and user flows to the extent supported by the Google AI Studio environment.
+
+Do not install tools just for testing.
+
+## 11.1 Date tests
+
+Test documents containing:
+
+- Historical dates.
+- Publication dates.
+- Application deadlines.
+- Proposal submission deadlines.
+- Pre-bid meetings.
+- Question deadlines.
+- Evaluation dates.
+- Award dates.
+- Multiple programmes with separate deadlines.
+- Ambiguous numeric dates.
+- Dates in tables.
+- Date ranges.
+- Dates without years.
+
+Expected behaviour:
+
+The system distinguishes the actual submission deadline from unrelated milestones.
+
+A publication or release date must not become the main deadline.
+
+## 11.2 Financial tests
+
+Test:
+
+- Scholarship awards.
+- Tuition fees.
+- Application charges.
+- Contract ceiling.
+- Estimated project value.
+- Zero-dollar baseline.
+- Bid security.
+- Insurance value.
+- Penalties.
+- Indian lakh and crore formats.
+- Multiple currencies.
+- Amounts from unrelated examples.
+
+Expected behaviour:
+
+Every amount retains its correct category and supporting evidence.
+
+No unrelated values are merged into one financial summary.
+
+## 11.3 Requirements tests
+
+Test:
+
+- Explicit mandatory documents.
+- Conditional requirements.
+- General recommendations.
+- Informational paragraphs.
+- Repeated requirements.
+- Requirements in tables.
+- Requirements with exceptions.
+- Documents containing no explicit checklist.
+
+Expected behaviour:
+
+No invented mandatory requirements.
+
+## 11.4 RFP tests
+
+Use the observed RFP schedule as a regression scenario.
+
+Expected:
+
+- Release: June 7, 2021.
+- Intent: June 14, 2021.
+- Presentation: June 18, 2021.
+- Questions cutoff: July 9, 2021.
+- Responses: July 23, 2021.
+- Agreement revisions: August 6, 2021.
+- Proposal submission: August 20, 2021.
+- Technical conferences/interviews: August 30–September 10, 2021.
+- Evaluation: September 13–October 8, 2021.
+- Awards: October 11–29, 2021.
+
+The primary proposal deadline must be August 20, 2021.
+
+Do not treat all these events as proposal deadlines.
+
+Do not insert generic eligibility conditions or generic payment terms unless the source contains them.
+
+## 11.5 Scholarship tests
+
+Use the observed scholarship scenario as a regression test.
+
+Verify that:
+
+- Historical dates are not labelled as current deadlines.
+- Scholarship amounts are not combined with tuition examples or unrelated programme values.
+- Advice is not labelled as mandatory documentation.
+- The actual scholarship award amount is identified only when evidence supports it.
+- Missing information is labelled Not stated.
+- Different scholarships in one document stay separate.
+
+## 11.6 Extraction tests
+
+Test available formats:
+
+- Text PDF.
+- Scanned PDF.
+- DOCX.
+- XLSX.
+- CSV.
+- PPTX.
+- TXT.
+- Images, where supported.
+
+Check extraction completeness and table relationships.
+
+Do not report successful extraction for an empty document.
+
+## 11.7 AI tests
+
+Test:
+
+- No API key.
+- Invalid API key.
+- Valid configured provider, if available in the environment.
+- Selected model changes.
+- OpenRouter pricing unavailable.
+- Verified free model.
+- Paid model.
+- Provider timeout.
+- Long document.
+- Malformed AI response.
+- Missing evidence quote.
+
+Do not request my API key.
+
+If a live provider cannot be tested, mark it as **Not verified in this environment**, while still testing the request construction and error handling that can be tested without credentials.
+
+## 11.8 Privacy tests
+
+Test that:
+
+- Phone numbers are detected where supported.
+- Addresses are detected where supported.
+- Sensitive IDs are handled appropriately.
+- Company names are not expanded into entire sentences.
+- Original text is not accidentally sent to external AI.
+- Encrypted API keys are not logged.
+- Users cannot update ownership identifiers to gain access to other users' records.
+
+## 11.9 Fraud scanner tests
+
+Test:
+
+- PDF with metadata.
+- PDF without metadata.
+- Image with available metadata.
+- Extension and file-type mismatch.
+- Suspicious payment instructions.
+- Suspicious links.
+- Missing or inconsistent organisation information.
+
+Expected behaviour:
+
+The feature reports actual findings and limitations, never a definitive fake/genuine verdict without proof.
+
+## 11.10 Full application regression
+
+Test the principal user flow:
+
+1. Open DOCULENS.
+2. Navigate to the dashboard.
+3. Upload a supported document.
+4. Confirm extraction.
+5. Review deterministic analysis.
+6. Open dates.
+7. Open financial information.
+8. Open requirements.
+9. Review source evidence.
+10. Open the RFP or relevant category-specific analysis.
+11. Open File Authenticity & Fraud Signals.
+12. Use AI enhancement when a configured key is available.
+13. Open AI Q&A when available.
+14. Review privacy settings.
+15. Save or restore document analysis where supported.
+16. Export results.
+17. Check responsive layout and navigation.
+
+All major existing functions must continue working.
+
+---
+
+# PART 12 — IMPLEMENTATION ORDER
+
+Follow this order to avoid breaking shared functionality.
+
+### Phase 1 — Safe investigation
+
+- Inspect the project structure.
+- Respect sensitive-file exclusions.
+- Trace current architecture.
+- Verify initial findings.
+- Identify shared files and dependencies.
+- Document the root causes.
+
+### Phase 2 — Data model and evidence foundation
+
+- Improve shared extraction/evidence types.
+- Add source references.
+- Standardise verification states.
+- Ensure compatibility with existing stored results.
+
+### Phase 3 — Deterministic engine
+
+Fix:
+
+- Date extraction.
+- Deadline classification.
+- Primary deadline selection.
+- Financial classification.
+- Requirements classification.
+- False mandatory requirements.
+- Readiness calculations.
+
+### Phase 4 — RFP intelligence
+
+- Isolate WCI demo fixture.
+- Remove generic hardcoded assumptions.
+- Implement source-grounded schedule extraction.
+- Improve compliance matrix and bid preparation.
+- Fix primary deadline detection.
+
+### Phase 5 — Extraction and OCR
+
+- Fix browser/Node OCR execution.
+- Improve Docling handling.
+- Repair PDF extraction.
+- Preserve page and table provenance.
+- Correct page coverage and quality reporting.
+- Fix upload and timeout behaviour.
+
+### Phase 6 — AI integration
+
+- Fix model-selection flow.
+- Fix OpenRouter pricing detection.
+- Fix Gemini model selection.
+- Add robust chunking and aggregation.
+- Validate evidence.
+- Improve error and timeout handling.
+
+### Phase 7 — Privacy and security
+
+- Improve redaction.
+- Fix company name extraction.
+- Secure API-key handling.
+- Correct Firestore ownership update rules.
+- Review storage claims and API request handling.
+
+### Phase 8 — Fraud detection
+
+- Add metadata analysis.
+- Add file-consistency checks.
+- Add content scam signals.
+- Add a dedicated UI section.
+- Show evidence and limitations.
+
+### Phase 9 — Frontend integration
+
+- Connect all results to the existing UI.
+- Preserve existing design.
+- Fix interactions and overflow.
+- Improve status and error messages.
+- Ensure all tabs and actions work.
+
+### Phase 10 — Testing and final verification
+
+- Run available checks.
+- Test core functions.
+- Perform regression testing.
+- Fix problems discovered during testing.
+- Produce final implementation report.
+
+Do not skip a phase simply to finish faster.
+
+---
+
+# PART 13 — IMPORTANT PRODUCT BEHAVIOUR
+
+The following principles must govern the entire application.
+
+## A. Deterministic analysis must always be useful
+
+Without an AI key, users should still receive:
+
+- Extracted document text.
+- Dates.
+- Financial values.
+- Document classification.
+- Source-grounded key information.
+- Requirements.
+- Checklists.
+- Tables.
+- Evidence references.
+- Basic fraud and metadata signals.
+- Useful warnings.
+
+AI is an enhancement, not a dependency.
+
+## B. AI must improve understanding, not invent information
+
+AI can:
+
+- Explain difficult clauses.
+- Summarise sections.
+- Compare requirements.
+- Identify relationships between information.
+- Suggest questions to ask the issuing authority.
+- Explain possible risks.
+- Help users understand complex documents.
+
+But AI must not invent the underlying facts.
+
+## C. Every important result must be traceable
+
+The user should be able to click a result and find where it came from.
+
+A date, amount, eligibility condition or mandatory requirement without evidence must not be presented as confirmed.
+
+## D. Different document types need different intelligence
+
+Do not show the same generic report for every document.
+
+Scholarships, RFPs, admissions, jobs, contracts, financial reports and general documents should use relevant extraction and analysis categories.
+
+Use a general fallback for unknown document types without inventing category-specific information.
+
+## E. Accuracy is more important than the number of results
+
+Do not display 100 extracted findings if only 20 are meaningful.
+
+Do not give a 100% completion score when important pages were not processed.
+
+Do not show a huge checklist of invented requirements to make the application look powerful.
+
+---
+
+# PART 14 — FINAL ACCEPTANCE CRITERIA
+
+Consider the repair complete only when the following conditions are satisfied:
+
+**Document intelligence**
+
+- Dates are classified by their actual meaning.
+- The correct primary deadline is selected.
+- Financial values are correctly categorised.
+- Mandatory requirements are source-grounded.
+- Historical events are not confused with current deadlines.
+- RFP analysis is generic and evidence-driven.
+- WCI demo data cannot contaminate real uploads.
+
+**Extraction**
+
+- Supported file formats are handled correctly.
+- Scanned PDFs use the correct OCR execution path.
+- Pages and tables retain provenance.
+- Empty pages are not reported as successfully extracted.
+- Extraction limitations are visible.
+
+**AI**
+
+- Selected models are actually used.
+- Free-model detection is reliable.
+- Gemini and OpenRouter requests respect provider selection.
+- Long documents are processed using chunks rather than arbitrary first-character sampling.
+- AI evidence is validated.
+- The app works without an AI key.
+- AI failures are communicated properly.
+
+**Security**
+
+- No API keys are hardcoded.
+- Sensitive content is redacted before external AI processing.
+- Firestore ownership cannot be changed to bypass access control.
+- No private user information appears in logs.
+- The existing vault functionality remains operational.
+
+**Fraud signals**
+
+- File metadata is extracted where supported.
+- File inconsistencies are detected.
+- Content-based scam warnings include evidence.
+- No unsupported fake/genuine verdicts are displayed.
+
+**Application functionality**
+
+- Existing features remain available.
+- Buttons and controls work.
+- Navigation works.
+- Export functions work.
+- Document history behaves correctly.
+- Layout remains responsive.
+- The application does not crash because of malformed input or API failure.
+
+---
+
+# PART 15 — FINAL REPORT
+
+After completing the work, give me a proper report with the following sections.
+
+## 1. Problems discovered
+
+List the problems you actually confirmed in the source code.
+
+Do not list unverified assumptions as confirmed bugs.
+
+## 2. Fixes implemented
+
+For every fix, provide:
+
+- Problem.
+- Root cause.
+- Solution.
+- Files modified.
+- What changed in the application's behaviour.
+
+## 3. Features completed
+
+List the working features, including the new File Authenticity & Fraud Signals feature.
+
+## 4. Testing report
+
+Use a table:
+
+| Test | Result | Notes |
+|---|---|---|
+| Date extraction | Pass/Fail/Not tested | |
+| Primary deadline | Pass/Fail/Not tested | |
+| Financial extraction | Pass/Fail/Not tested | |
+| Requirement detection | Pass/Fail/Not tested | |
+| RFP analysis | Pass/Fail/Not tested | |
+| PDF extraction | Pass/Fail/Not tested | |
+| OCR | Pass/Fail/Not tested | |
+| Spreadsheet extraction | Pass/Fail/Not tested | |
+| AI model selection | Pass/Fail/Not tested | |
+| OpenRouter free-model detection | Pass/Fail/Not tested | |
+| Gemini integration | Pass/Fail/Not tested | |
+| Long-document analysis | Pass/Fail/Not tested | |
+| Privacy redaction | Pass/Fail/Not tested | |
+| Key vault | Pass/Fail/Not tested | |
+| Firestore security | Pass/Fail/Not tested | |
+| Fraud signals | Pass/Fail/Not tested | |
+| Export | Pass/Fail/Not tested | |
+| UI interactions | Pass/Fail/Not tested | |
+
+Never mark something as Pass unless it was genuinely tested.
+
+## 5. Remaining limitations
+
+Explain anything that remains incomplete and why.
+
+Separate:
+
+- Code not implemented.
+- Implemented but not tested.
+- Tested and failed.
+- Requires an unavailable external service.
+- Requires a document or provider credential that was not available.
+
+## 6. Files changed
+
+List the actual source files modified.
+
+Do not claim a file was modified when it was only inspected.
+
+## 7. Final application status
+
+Give an honest assessment of whether DOCULENS is ready for a live demonstration.
+
+---
+
+# FINAL INSTRUCTION
+
+Start by inspecting the existing project safely and identifying the problems.
+
+Then fix the actual code.
+
+Do not return only a plan, explanation, example code or suggested solution.
+
+Do not replace the application with a new starter project.
+
+Do not remove existing functions to make the repair easier.
+
+Do not install packages or software.
+
+Do not inspect sensitive files.
+
+Do not ask me to provide API keys or credentials.
+
+Work systematically, preserve the existing architecture and design, and finish with genuine testing and an honest report.
+
+**The final goal is a fully functional DOCULENS platform that intelligently reads documents, extracts the correct information, identifies actual requirements, understands dates and financial details, provides source evidence, protects user privacy and assists users with or without AI.**
+
+**Accuracy, reliability and working functionality take priority over decorative features or impressive-looking but fabricated results.**
